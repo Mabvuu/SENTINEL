@@ -1,0 +1,80 @@
+.clients-page {
+  max-width: 1320px;
+  margin: auto;
+  padding: 32px 20px;
+  color: #edf2f9;
+}
+.clients-header,
+.client-card-heading,
+.clients-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.clients-header { margin-bottom: 28px; }
+.clients-brand { color: #f4a15a; letter-spacing: 3px; font-weight: 800; }
+.clients-page h1 { font-size: 34px; margin: 8px 0; }
+.clients-page h2 { margin-top: 0; }
+.clients-page h3 { margin: 0; }
+.clients-page p { color: #b7c5d9; line-height: 1.5; }
+.clients-page a { color: #f4a15a; }
+.clients-grid {
+  display: grid;
+  grid-template-columns: minmax(280px, 380px) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+.clients-panel {
+  background: #152236;
+  border: 1px solid #2a3a51;
+  border-radius: 16px;
+  padding: 24px;
+  min-width: 0;
+}
+.clients-page fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+.clients-page label { display: block; margin-bottom: 16px; }
+.clients-page input,
+.clients-page textarea {
+  display: block;
+  width: 100%;
+  background: #0b1422;
+  color: #edf2f9;
+  border: 1px solid #42516a;
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 7px;
+}
+.clients-page textarea { resize: vertical; }
+.clients-page button {
+  background: #f4a15a;
+  color: #0b1422;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.clients-page button.secondary {
+  background: transparent;
+  border-color: #60718a;
+  color: #edf2f9;
+}
+.clients-page button:disabled { opacity: .5; cursor: default; }
+.clients-actions { justify-content: flex-start; margin-top: 18px; }
+.clients-search { display: flex; gap: 10px; margin-bottom: 16px; }
+.clients-search input { margin: 0; min-width: 0; }
+.client-card { padding: 20px 0; border-bottom: 1px solid #34435b; }
+.client-card-heading span { color: #f4a15a; font-size: 13px; }
+.client-card p { overflow-wrap: anywhere; }
+.client-address { white-space: pre-wrap; }
+.clients-error,
+.clients-success { padding: 14px; border-radius: 8px; margin-bottom: 20px; }
+.clients-error { background: #451c28; color: #fecaca; }
+.clients-success { background: #16392d; color: #bbf7d0; }
+@media (max-width: 800px) {
+  .clients-grid { grid-template-columns: 1fr; }
+  .clients-panel { padding: 18px; }
+  .clients-search { flex-wrap: wrap; }
+}
