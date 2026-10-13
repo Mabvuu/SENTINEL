@@ -78,3 +78,85 @@
   .clients-panel { padding: 18px; }
   .clients-search { flex-wrap: wrap; }
 }
+
+/* Compact management screens */
+.clients-page { font-size: 14px; padding: 24px; }
+.clients-page .clients-header { margin-bottom: 20px; gap: 16px; }
+.clients-page h1 { font-size: 24px; font-weight: 600; margin: 8px 0; }
+.clients-page h2 { font-size: 17px; font-weight: 600; margin: 0 0 12px; }
+.clients-page h3 { font-size: 15px; font-weight: 600; }
+.clients-page p { font-size: 14px; line-height: 1.5; }
+.clients-page .clients-brand { font-size: 11px; letter-spacing: 2px; }
+.clients-page .clients-panel { padding: 18px; border-radius: 10px; }
+.clients-page button { padding: 9px 14px; font-size: 13px; font-weight: 500; }
+.clients-page label { display: block; font-size: 13px; }
+.clients-page input,
+.clients-page select,
+.clients-page textarea {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  margin-top: 6px;
+  padding: 9px 11px;
+  border: 1px solid #34445b;
+  border-radius: 6px;
+  background: #0b1422;
+  color: #edf2fa;
+  font: inherit;
+}
+.clients-page .clients-actions { display: flex; align-items: center; gap: 12px; }
+@media (max-width: 600px) {
+  .clients-page { padding: 16px; }
+  .clients-page .clients-header { flex-wrap: wrap; }
+}
+
+/* Client rows and details popup */
+.clients-page button.client-directory-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  margin: 0;
+  padding: 14px 12px;
+  border: 0;
+  border-bottom: 1px solid #34445b;
+  border-radius: 0;
+  background: transparent;
+  color: #edf2fa;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 400;
+}
+.clients-page button.client-directory-row:hover,
+.clients-page button.client-directory-row:focus-visible {
+  background: #1d2c40;
+}
+.client-directory-row small {
+  margin-left: auto;
+  color: #a8b7cb;
+  font-size: 12px;
+}
+.client-profile-dialog {
+  box-sizing: border-box;
+  width: min(580px, calc(100vw - 32px));
+  max-height: 85dvh;
+  overflow: auto;
+  margin: auto;
+  padding: 22px;
+  border: 1px solid #34445b;
+  border-radius: 12px;
+  background: #152236;
+  color: #edf2fa;
+}
+.client-profile-dialog::backdrop { background: rgb(0 0 0 / 65%); }
+.client-profile-close { display: block; margin: 0 0 18px auto; }
+.client-profile-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 17px;
+  font-weight: 500;
+}
+.client-profile-heading small { font-size: 12px; color: #a8b7cb; }
+.client-profile-dialog .client-expanded-content { padding: 12px 0 0; }
+body:has(.client-profile-dialog[open]) { overflow: hidden; }

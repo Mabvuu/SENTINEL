@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { dashboardRequest } from '../../lib/dashboard-client';
 import '../clients/clients.css';
 import './guards.css';
+import GuardLocation from './GuardLocation';
 
 type Guard = {
   id: number;
@@ -88,6 +89,13 @@ export default function GuardsPage() {
 
   const saving = useRef(false);
   const formRef = useRef<HTMLFormElement>(null);
+  const profileRef = useRef<HTMLDialogElement>(null);
+  const [viewedGuard, setViewedGuard] = useState<Guard | null>(null);
+
+  useEffect(() => {
+    if (viewedGuard) profileRef.current?.showModal();
+  }, [viewedGuard]);
+  const dialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
     let active = true;
@@ -123,11 +131,13 @@ export default function GuardsPage() {
   }, [page, search, revision]);
 
   function reset() {
+    dialogRef.current?.close();
     setEditing(null);
     setDraft({ ...blank });
   }
 
   function edit(guard: Guard) {
+    dialogRef.current?.showModal();
     setEditing(guard.id);
 
     setDraft({
@@ -256,7 +266,15 @@ export default function GuardsPage() {
           <p>Register, manage and monitor security personnel.</p>
         </div>
 
-        <Link href="/">Back to Dashboard</Link>
+        <div className="clients-actions">
+    <Link href="/">Dashboard</Link>
+    <button type="button" onClick={() => {
+      reset();
+      setError('');
+      setSuccess('');
+      dialogRef.current?.showModal();
+    }}>Register guard</button>
+  </div>
       </header>
 
       {error && (
@@ -297,7 +315,24 @@ export default function GuardsPage() {
       </section>
 
       <div className="clients-grid">
+        <dialog
+          ref={dialogRef}
+          className="sentinel-guard-dialog"
+          aria-label="Guard registration and editing"
+          onCancel={event => {
+            if (busy) event.preventDefault();
+            else reset();
+          }}
+        >
         <section className="clients-panel">
+          <button
+            type="button"
+            className="guard-dialog-close secondary"
+            aria-label="Close registration"
+            disabled={busy}
+            onClick={reset}
+          >Close</button>
+          {error && <p className="clients-error" role="alert">{error}</p>}
           <h2>
             {editing === null ? 'Register Guard' : 'Edit Guard'}
           </h2>
@@ -481,6 +516,7 @@ export default function GuardsPage() {
             </fieldset>
           </form>
         </section>
+        </dialog>
 
         <section className="clients-panel">
           <div className="guards-list-header">
@@ -508,59 +544,18 @@ export default function GuardsPage() {
 
           <div className="guards-list">
             {!loading && data?.results.map(guard => (
-              <article className="guard-card" key={guard.id}>
-                <div className="guard-card-top">
-                  <div>
-                    <h3>
-                      {`${guard.first_name} ${guard.last_name}`.trim()
-                        || guard.username}
-                    </h3>
-                    <p>@{guard.username}</p>
-                  </div>
+              
+<button
+  key={guard.id}
+  type="button"
+  className="guard-directory-row"
+  onClick={() => setViewedGuard(guard)}
+>
+  <span>{[guard.first_name, guard.last_name].filter(Boolean).join(' ') || guard.username}</span>
+  <span className="guard-row-status">{guard.is_active ? 'Active' : 'Inactive'}</span>
+  <span aria-hidden="true">›</span>
+</button>
 
-                  <span className={
-                    guard.is_active
-                      ? 'guard-status active'
-                      : 'guard-status inactive'
-                  }>
-                    {guard.is_active ? 'Active' : 'Inactive'}
-                  </span>
-                </div>
-
-                <div className="guard-details">
-                  <p><strong>Email:</strong> {guard.email || '—'}</p>
-                  <p><strong>Phone:</strong> {guard.phone || '—'}</p>
-                  <p><strong>Account ID:</strong> {guard.id}</p>
-
-                  <p><strong>Employee number:</strong> {guard.employee_number || '—'}</p>
-                  <p><strong>National ID:</strong> {guard.national_id || '—'}</p>
-                  <p><strong>Training:</strong> {guard.training_status.replaceAll('_', ' ')}</p>
-                  <p><strong>Vetting:</strong> {guard.vetting_status.replaceAll('_', ' ')}</p>
-                  <p><strong>Employment:</strong> {guard.employment_status.replaceAll('_', ' ')}</p>
-                  <p><strong>Training notes:</strong> {guard.training_notes || '—'}</p>
-                  <p><strong>Vetting notes:</strong> {guard.vetting_notes || '—'}</p>
-
-                </div>
-
-                <div className="guard-actions">
-                  <button
-                    type="button"
-                    disabled={busy}
-                    onClick={() => edit(guard)}
-                  >
-                    Edit
-                  </button>
-
-                  <button
-                    type="button"
-                    className="secondary"
-                    disabled={busy}
-                    onClick={() => void toggle(guard)}
-                  >
-                    {guard.is_active ? 'Deactivate' : 'Activate'}
-                  </button>
-                </div>
-              </article>
             ))}
           </div>
 
@@ -585,6 +580,71 @@ export default function GuardsPage() {
           </div>
         </section>
       </div>
-    </main>
+    <dialog
+    ref={profileRef}
+    className="guard-profile-dialog"
+    aria-label="Guard details"
+    onClose={() => setViewedGuard(null)}
+  >
+    <button type="button" className="secondary profile-close"
+      onClick={() => profileRef.current?.close()}>Close</button>
+    {viewedGuard && (() => {
+      const guard = viewedGuard;
+      return (<article className="guard-card">
+                <div className="guard-card-top">
+                  <div>
+                    <h3>
+                      {`${guard.first_name} ${guard.last_name}`.trim()
+                        || guard.username}
+                    </h3>
+                    <p>@{guard.username}</p>
+                  </div>
+
+                  <span className={
+                    guard.is_active
+                      ? 'guard-status active'
+                      : 'guard-status inactive'
+                  }>
+                    {guard.is_active ? 'Active' : 'Inactive'}
+                  </span>
+                </div>
+
+                <GuardLocation guardId={guard.id} /><div className="guard-details">
+                  <p><strong>Email:</strong> {guard.email || '—'}</p>
+                  <p><strong>Phone:</strong> {guard.phone || '—'}</p>
+                  <p><strong>Account ID:</strong> {guard.id}</p>
+
+                  <p><strong>Employee number:</strong> {guard.employee_number || '—'}</p>
+                  <p><strong>National ID:</strong> {guard.national_id || '—'}</p>
+                  <p><strong>Training:</strong> {guard.training_status.replaceAll('_', ' ')}</p>
+                  <p><strong>Vetting:</strong> {guard.vetting_status.replaceAll('_', ' ')}</p>
+                  <p><strong>Employment:</strong> {guard.employment_status.replaceAll('_', ' ')}</p>
+                  <p><strong>Training notes:</strong> {guard.training_notes || '—'}</p>
+                  <p><strong>Vetting notes:</strong> {guard.vetting_notes || '—'}</p>
+
+                </div>
+
+                <div className="guard-actions">
+                  <button
+                    type="button"
+                    disabled={busy}
+                    onClick={() => { profileRef.current?.close(); edit(guard); }}
+                  >
+                    Edit
+                  </button>
+
+                  <button
+                    type="button"
+                    className="secondary"
+                    disabled={busy}
+                    onClick={() => { profileRef.current?.close(); void toggle(guard); }}
+                  >
+                    {guard.is_active ? 'Deactivate' : 'Activate'}
+                  </button>
+                </div>
+              </article>);
+    })()}
+  </dialog>
+  </main>
   );
 }

@@ -97,6 +97,50 @@ export default function SitesPage() {
   const [success, setSuccess] = useState('');
   const saving = useRef(false);
   const form = useRef<HTMLFormElement>(null);
+  const siteProfile = useRef<HTMLDialogElement>(null);
+  const [viewedSite, setViewedSite] = useState<Site | null>(null);
+
+  useEffect(() => {
+    if (viewedSite) siteProfile.current?.showModal();
+  }, [viewedSite]);
+
+  const dialog = useRef<HTMLDialogElement>(null);
+  const [requestedClient, setRequestedClient] = useState<number | null>(null);
+
+  useEffect(() => {
+    const value = new URLSearchParams(window.location.search).get('client');
+    const id = Number(value);
+    if (value && Number.isSafeInteger(id) && id > 0) {
+      setRequestedClient(id);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (requestedClient === null || clientsLoading || clientError) return;
+
+    const selected = clients.find(client => client.id === requestedClient);
+    if (selected) {
+      if (selected.is_active) {
+        setEditing(null);
+        setDraft({ ...blank, client: String(selected.id) });
+        setError('');
+        setSuccess('');
+        dialog.current?.showModal();
+      } else {
+        setError('This client is archived. Restore it before adding a site.');
+      }
+      setRequestedClient(null);
+      return;
+    }
+
+    if (clientNext) {
+      setClientsLoading(true);
+      setClientPage(value => value + 1);
+    } else {
+      setError('The selected client could not be found in this account.');
+      setRequestedClient(null);
+    }
+  }, [requestedClient, clients, clientsLoading, clientError, clientNext]);
 
   useEffect(() => {
     let active = true;
@@ -156,11 +200,13 @@ export default function SitesPage() {
   }, [page, search, revision]);
 
   function reset() {
+    dialog.current?.close();
     setEditing(null);
     setDraft({ ...blank });
   }
 
   function edit(site: Site) {
+    dialog.current?.showModal();
     setEditing(site);
     setDraft({
       client: String(site.client),
@@ -266,6 +312,14 @@ export default function SitesPage() {
         <nav className="clients-actions" aria-label="Management">
           <Link href="/">Dashboard</Link>
           <Link href="/clients">Clients</Link>
+          <button type="button" onClick={() => {
+            reset();
+            setError('');
+            setSuccess('');
+            setClientPage(1);
+            setClientRevision(value => value + 1);
+            dialog.current?.showModal();
+          }}>Add site</button>
         </nav>
       </header>
 
@@ -273,7 +327,23 @@ export default function SitesPage() {
       {success && <div role="status" className="clients-success">{success}</div>}
 
       <div className="clients-grid">
+        <dialog
+          ref={dialog}
+          className="sentinel-site-dialog"
+          aria-label="Add or edit site"
+          onCancel={event => {
+            if (busy) event.preventDefault();
+            else reset();
+          }}
+        >
         <section className="clients-panel">
+          <button
+            type="button"
+            className="site-dialog-close secondary"
+            disabled={busy}
+            onClick={reset}
+          >Close</button>
+          {error && <p role="alert" className="clients-error">{error}</p>}
           <h2>{editing === null ? 'Add site' : 'Edit site'}</h2>
           {clientError && (
             <div role="alert" className="clients-error">
@@ -314,7 +384,24 @@ export default function SitesPage() {
 
               {editing === null && (
                 <div className="site-client-controls">
-                  {clientsLoading && <p>Loading clients…</p>}
+                  {clientsLoading && <p role="status">Loading clients…</p>}
+                  {clientsLoading === false && clientError === '' && (
+                    <p role="status">
+                      {clients.filter(client => client.is_active).length} active clients loaded.
+                      {clients.some(client => client.is_active) === false
+                        ? ' Add or activate a client first, or load more clients below.'
+                        : ''}
+                    </p>
+                  )}
+                  <button
+                    type="button"
+                    className="secondary"
+                    disabled={clientsLoading}
+                    onClick={() => {
+                      setClientPage(1);
+                      setClientRevision(value => value + 1);
+                    }}
+                  >Refresh clients</button>
                   {clientNext && clientError.length === 0 && (
                     <button
                       type="button"
@@ -390,6 +477,7 @@ export default function SitesPage() {
             </fieldset>
           </form>
         </section>
+        </dialog>
 
         <section className="clients-panel">
           <h2>Site directory</h2>
@@ -421,36 +509,18 @@ export default function SitesPage() {
               {data.results.length === 0 && <p>No matching sites.</p>}
 
               {data.results.map((site) => (
-                <article key={site.id} className="client-card">
-                  <div className="client-card-heading">
-                    <h3>{site.name}</h3>
-                    <span>{site.is_active ? 'Active' : 'Archived'}</span>
-                  </div>
-                  <p>{site.client_name}</p>
-                  <p className="client-address">{site.address}</p>
-                  <div className="site-details">
-                    <span>GPS: {site.latitude}, {site.longitude}</span>
-                    <span>Radius: {site.radius_metres} m</span>
-                    <span>Maximum uncertainty: {site.max_accuracy_metres} m</span>
-                    <span>Guards required: {site.required_guards}</span>
-                  </div>
-                  <div className="clients-actions">
-                    <button
-                      className="secondary"
-                      disabled={busy}
-                      onClick={() => edit(site)}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="secondary"
-                      disabled={busy}
-                      onClick={() => toggle(site)}
-                    >
-                      {site.is_active ? 'Archive' : 'Restore'}
-                    </button>
-                  </div>
-                </article>
+                
+<button
+  key={site.id}
+  type="button"
+  className="site-directory-row"
+  onClick={() => setViewedSite(site)}
+>
+  <span>{site.name}</span>
+  <small>{site.is_active ? 'Active' : 'Archived'}</small>
+  <span aria-hidden="true">›</span>
+</button>
+
               ))}
 
               <div className="clients-actions">
@@ -472,6 +542,49 @@ export default function SitesPage() {
           )}
         </section>
       </div>
-    </main>
+    
+<dialog
+  ref={siteProfile}
+  className="site-profile-dialog"
+  aria-label="Site details"
+  onClose={() => setViewedSite(null)}
+>
+  <button type="button" className="secondary site-profile-close"
+    onClick={() => siteProfile.current?.close()}>Close</button>
+  {viewedSite && (() => {
+    const site = viewedSite;
+    return (<article className="site-profile-content">
+                  <div className="client-card-heading">
+                    <h3>{site.name}</h3>
+                    <span>{site.is_active ? 'Active' : 'Archived'}</span>
+                  </div>
+                  <p>{site.client_name}</p>
+                  <p className="client-address">{site.address}</p>
+                  <div className="site-details">
+                    <span>GPS: {site.latitude}, {site.longitude}</span>
+                    <span>Radius: {site.radius_metres} m</span>
+                    <span>Maximum uncertainty: {site.max_accuracy_metres} m</span>
+                    <span>Guards required: {site.required_guards}</span>
+                  </div>
+                  <div className="clients-actions">
+                    <button
+                      className="secondary"
+                      disabled={busy}
+                      onClick={() => { siteProfile.current?.close(); edit(site); }}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="secondary"
+                      disabled={busy}
+                      onClick={() => { siteProfile.current?.close(); void toggle(site); }}
+                    >
+                      {site.is_active ? 'Archive' : 'Restore'}
+                    </button>
+                  </div>
+                </article>);
+  })()}
+</dialog>
+</main>
   );
 }

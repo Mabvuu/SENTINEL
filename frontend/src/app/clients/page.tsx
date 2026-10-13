@@ -71,6 +71,14 @@ export default function ClientsPage() {
   const [success, setSuccess] = useState('');
   const saving = useRef(false);
   const formRef = useRef<HTMLFormElement>(null);
+  const profileRef = useRef<HTMLDialogElement>(null);
+  const [viewedClient, setViewedClient] = useState<Client | null>(null);
+
+  useEffect(() => {
+    if (viewedClient) profileRef.current?.showModal();
+  }, [viewedClient]);
+
+  const clientDialog = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
     let active = true;
@@ -101,11 +109,13 @@ export default function ClientsPage() {
   }, [page, search, revision]);
 
   function resetForm() {
+    clientDialog.current?.close();
     setEditing(null);
     setDraft({ ...emptyDraft });
   }
 
   function edit(client: Client) {
+    clientDialog.current?.showModal();
     setEditing(client.id);
     setDraft({
       name: client.name,
@@ -193,14 +203,22 @@ export default function ClientsPage() {
   }
 
   return (
-    <main className="clients-page">
+    <main className="clients-page client-directory-page">
       <header className="clients-header">
         <div>
           <p className="clients-brand">SENTINEL</p>
           <h1>Clients</h1>
           <p>Manage companies and their contact details.</p>
         </div>
-        <Link href="/">Back to dashboard</Link>
+        <div className="clients-actions">
+    <Link href="/sites">Sites</Link>
+    <button type="button" onClick={() => {
+      resetForm();
+      setError('');
+      setSuccess('');
+      clientDialog.current?.showModal();
+    }}>Add client</button>
+  </div>
       </header>
 
       {error && <div role="alert" className="clients-error">{error}</div>}
@@ -209,7 +227,23 @@ export default function ClientsPage() {
       )}
 
       <div className="clients-grid">
+        <dialog
+          ref={clientDialog}
+          className="sentinel-client-dialog"
+          aria-label="Add or edit client"
+          onCancel={event => {
+            if (busy) event.preventDefault();
+            else resetForm();
+          }}
+        >
         <section className="clients-panel">
+          <button
+            type="button"
+            className="client-dialog-close secondary"
+            disabled={busy}
+            onClick={resetForm}
+          >Close</button>
+          {error && <p role="alert" className="clients-error">{error}</p>}
           <h2>{editing === null ? 'Add client' : 'Edit client'}</h2>
 
           <form onSubmit={save} ref={formRef}>
@@ -256,6 +290,7 @@ export default function ClientsPage() {
             </fieldset>
           </form>
         </section>
+        </dialog>
 
         <section className="clients-panel">
           <h2>Client directory</h2>
@@ -288,34 +323,18 @@ export default function ClientsPage() {
               {data.results.length === 0 && <p>No matching clients.</p>}
 
               {data.results.map((client) => (
-                <article className="client-card" key={client.id}>
-                  <div className="client-card-heading">
-                    <h3>{client.name}</h3>
-                    <span>{client.is_active ? 'Active' : 'Archived'}</span>
-                  </div>
-                  <p>{client.contact_name || 'No contact person'}</p>
-                  <p>{client.email || 'No email'} · {client.phone || 'No phone'}</p>
-                  {client.address && <p className="client-address">{client.address}</p>}
+                
+<button
+  key={client.id}
+  type="button"
+  className="client-directory-row"
+  onClick={() => setViewedClient(client)}
+>
+  <span>{client.name}</span>
+  <small>{client.is_active ? 'Active' : 'Archived'}</small>
+  <span aria-hidden="true">›</span>
+</button>
 
-                  <div className="clients-actions">
-                    <button
-                      type="button"
-                      className="secondary"
-                      disabled={busy}
-                      onClick={() => edit(client)}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      type="button"
-                      className="secondary"
-                      disabled={busy}
-                      onClick={() => toggle(client)}
-                    >
-                      {client.is_active ? 'Archive' : 'Restore'}
-                    </button>
-                  </div>
-                </article>
               ))}
 
               <div className="clients-actions">
@@ -337,6 +356,58 @@ export default function ClientsPage() {
           )}
         </section>
       </div>
-    </main>
+    
+  <dialog
+    ref={profileRef}
+    className="client-profile-dialog"
+    aria-label="Client details"
+    onClose={() => setViewedClient(null)}
+  >
+    <button
+      type="button"
+      className="secondary client-profile-close"
+      onClick={() => profileRef.current?.close()}
+    >Close</button>
+    {viewedClient && (() => {
+      const client = viewedClient;
+      return (<section className="client-profile-content">
+                  <div className="client-profile-heading">
+                    <span>{client.name}</span>
+                    <small>{client.is_active ? 'Active' : 'Archived'}</small>
+                  </div>
+                  <div className="client-expanded-content">
+                  {client.is_active && (
+                    <Link
+                      className="client-site-link"
+                      href={'/sites?client=' + client.id}
+                    >Add site for this client →</Link>
+                  )}
+                  <p>{client.contact_name || 'No contact person'}</p>
+                  <p>{client.email || 'No email'} · {client.phone || 'No phone'}</p>
+                  {client.address && <p className="client-address">{client.address}</p>}
+
+                  <div className="clients-actions">
+                    <button
+                      type="button"
+                      className="secondary"
+                      disabled={busy}
+                      onClick={() => { profileRef.current?.close(); edit(client); }}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      type="button"
+                      className="secondary"
+                      disabled={busy}
+                      onClick={() => { profileRef.current?.close(); void toggle(client); }}
+                    >
+                      {client.is_active ? 'Archive' : 'Restore'}
+                    </button>
+                  </div>
+                </div>
+                </section>);
+    })()}
+  </dialog>
+</main>
   );
 }

@@ -24,3 +24,97 @@
 }
 .site-help { font-size: 13px; }
 .sites-page input:read-only { opacity: .7; }
+
+/* Site modal layout */
+.clients-page.sites-page {
+  padding: 24px;
+  font-size: 14px;
+}
+.sites-page .clients-header {
+  margin-bottom: 20px;
+  align-items: center;
+  gap: 16px;
+}
+.sites-page .clients-brand { font-size: 11px; letter-spacing: 2px; }
+.sites-page h1 { font-size: 24px; font-weight: 600; margin: 8px 0; }
+.sites-page h2 { font-size: 17px; font-weight: 600; margin: 0 0 16px; }
+.sites-page h3 { font-size: 15px; font-weight: 600; }
+.sites-page p { font-size: 13px; line-height: 1.5; }
+.sites-page .clients-grid { grid-template-columns: minmax(0, 1fr); }
+.sites-page .clients-panel {
+  padding: 20px;
+  border-radius: 10px;
+  min-height: 0;
+}
+.sites-page button {
+  padding: 9px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 6px;
+}
+.sites-page .clients-actions { display: flex; align-items: center; gap: 12px; }
+.sites-page .clients-search { margin-bottom: 14px; }
+.sites-page input,
+.sites-page select,
+.sites-page textarea {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  padding: 9px 11px;
+  margin-top: 6px;
+  border: 1px solid #34445b;
+  border-radius: 6px;
+  background: #0b1422;
+  color: #edf2fa;
+  font: inherit;
+  font-size: 14px;
+}
+.sites-page .clients-search input { margin-top: 0; }
+.sentinel-site-dialog {
+  width: min(680px, calc(100vw - 32px));
+  max-height: 85dvh;
+  margin: auto;
+  padding: 0;
+  overflow: auto;
+  color: #edf2fa;
+  background: #152236;
+  border: 1px solid #34445b;
+  border-radius: 12px;
+}
+.sentinel-site-dialog::backdrop { background: rgb(0 0 0 / 65%); }
+.sites-page .sentinel-site-dialog .clients-panel { border: 0; padding: 22px; }
+.site-dialog-close { float: right; }
+.sentinel-site-dialog fieldset {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 16px;
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+.sentinel-site-dialog fieldset > label {
+  display: block;
+  font-size: 13px;
+  margin: 0;
+}
+.sentinel-site-dialog fieldset > label:has(textarea),
+.sentinel-site-dialog .site-client-controls,
+.sentinel-site-dialog .site-help,
+.sentinel-site-dialog .clients-actions {
+  grid-column: 1 / -1;
+}
+.sentinel-site-dialog .site-client-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+}
+.sentinel-site-dialog .site-client-controls p { margin: 0; }
+.sites-page .site-help { color: #a8b7cb; font-size: 12px; margin: 0; }
+body:has(.sentinel-site-dialog[open]) { overflow: hidden; }
+@media (max-width: 600px) {
+  .clients-page.sites-page { padding: 16px; }
+  .sites-page .clients-header { flex-wrap: wrap; }
+  .sentinel-site-dialog fieldset { grid-template-columns: 1fr; }
+}

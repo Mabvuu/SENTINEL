@@ -1,0 +1,28 @@
+
+.roster-dialog {
+  width:min(680px,calc(100vw - 24px)); max-height:85dvh;
+  margin:auto; padding:24px; overflow:auto; border:1px solid #34445b;
+  border-radius:12px; background:#152236; color:#edf2fa;
+}
+.roster-dialog::backdrop { background:rgb(0 0 0 / 65%); }
+.roster-close { display:block; margin:0 0 16px auto; }
+.roster-list { margin-top:16px; }
+body .roster-page button.roster-row {
+  display:flex; align-items:center; gap:16px; width:100%; margin:0;
+  padding:16px 10px; background:transparent; color:#edf2fa;
+  border:0; border-bottom:1px solid #34445b; border-radius:0;
+  font-size:14px; font-weight:400; text-align:left;
+}
+.roster-row > span:first-child { flex:1; min-width:0; overflow-wrap:anywhere; }
+.roster-row small { display:block; margin-top:5px; color:#a8b7cb; font-size:12px; }
+body .roster-page button.roster-row:hover { background:#1d2c40; }
+.roster-pagination { margin-top:20px; }
+.roster-wide { grid-column:1 / -1; }
+body .roster-page dialog fieldset {
+  display:grid; grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:16px; margin-top:20px; padding:0; border:0;
+}
+@media(max-width:600px) {
+  body .roster-page button.roster-row { flex-wrap:wrap; }
+  .roster-row > span:nth-child(2) { font-size:12px; }
+}

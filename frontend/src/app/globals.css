@@ -23,3 +23,146 @@ a:focus-visible {
   outline: 2px solid #f4a15a;
   outline-offset: 3px;
 }
+
+/* Sentinel navigation and client flow v1 */
+body { padding-left: 208px; }
+.sentinel-global-nav {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: 208px;
+  box-sizing: border-box;
+  padding: 26px 16px;
+  background: #101b2b;
+  border-right: 1px solid #28374b;
+  z-index: 30;
+  font-family: Arial, sans-serif;
+}
+.sentinel-global-nav .sentinel-nav-brand {
+  display: block;
+  color: #edf2fa;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-decoration: none;
+  padding: 0 12px 30px;
+}
+.sentinel-nav-caption {
+  display: block;
+  padding: 0 12px 14px;
+  color: #8394aa;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+}
+.sentinel-global-nav nav { display: grid; gap: 5px; }
+.sentinel-global-nav nav a {
+  padding: 11px 12px;
+  border-radius: 7px;
+  color: #b9c6d7;
+  font-size: 13px;
+  text-decoration: none;
+}
+.sentinel-global-nav nav a:hover { background: #1c2c40; }
+.sentinel-global-nav nav a[aria-current="page"] {
+  background: #322a25;
+  color: #f4a15a;
+}
+body .sentinel .control-sidebar { display: none; }
+body .sentinel .control-shell { display: block; }
+body .clients-page { padding: 24px; font-size: 14px; }
+body .clients-page h1 { font-size: 24px; font-weight: 600; margin: 8px 0; }
+body .clients-page h2 { font-size: 17px; font-weight: 600; }
+body .clients-page p { font-size: 13px; line-height: 1.5; }
+body .clients-page .clients-header { margin-bottom: 20px; }
+body .clients-page .clients-panel { padding: 20px; border-radius: 10px; }
+body .clients-page button {
+  padding: 9px 14px;
+  font-size: 13px;
+  font-weight: 500;
+}
+body .client-directory-page .clients-grid,
+body .sites-page .clients-grid { grid-template-columns: minmax(0, 1fr); }
+body .client-expandable { padding: 0; border-bottom: 1px solid #34445b; }
+.client-expandable summary {
+  cursor: pointer;
+  padding: 16px 0;
+  color: #edf2fa;
+  font-size: 14px;
+}
+.client-expandable summary small {
+  float: right;
+  color: #a8b7cb;
+  font-size: 12px;
+}
+.client-expanded-content { padding: 0 0 18px 18px; }
+.client-site-link {
+  display: inline-block;
+  margin: 8px 0;
+  color: #f4a15a;
+  font-size: 13px;
+}
+.sentinel-client-dialog,
+.sentinel-site-dialog {
+  width: min(680px, calc(100vw - 32px));
+  max-height: 85dvh;
+  box-sizing: border-box;
+  margin: auto;
+  padding: 0;
+  overflow: auto;
+  background: #152236;
+  color: #edf2fa;
+  border: 1px solid #34445b;
+  border-radius: 12px;
+}
+.sentinel-client-dialog::backdrop,
+.sentinel-site-dialog::backdrop { background: rgb(0 0 0 / 65%); }
+.client-dialog-close { float: right; }
+body .clients-page dialog .clients-panel { border: 0; padding: 22px; }
+.clients-page dialog fieldset {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 16px;
+  border: 0;
+  margin: 16px 0 0;
+  padding: 0;
+}
+body .clients-page dialog label { margin: 0; font-size: 13px; }
+.clients-page dialog label:has(textarea),
+.clients-page dialog .clients-actions,
+.clients-page dialog .site-client-controls,
+.clients-page dialog .site-help { grid-column: 1 / -1; }
+body .clients-page dialog input,
+body .clients-page dialog select,
+body .clients-page dialog textarea {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  margin-top: 6px;
+  padding: 9px 11px;
+  background: #0b1422;
+  color: #edf2fa;
+  border: 1px solid #34445b;
+  border-radius: 6px;
+  font: inherit;
+  font-size: 14px;
+}
+body:has(dialog[open]) { overflow: hidden; }
+@media (max-width: 800px) {
+  body { padding-left: 0; padding-top: 60px; }
+  .sentinel-global-nav {
+    width: 100%;
+    height: 60px;
+    bottom: auto;
+    padding: 10px;
+    overflow-x: auto;
+    border-right: 0;
+    border-bottom: 1px solid #28374b;
+  }
+  .sentinel-global-nav .sentinel-nav-brand,
+  .sentinel-nav-caption { display: none; }
+  .sentinel-global-nav nav { display: flex; }
+  .sentinel-global-nav nav a { white-space: nowrap; }
+}
+@media (max-width: 600px) {
+  .clients-page dialog fieldset { grid-template-columns: 1fr; }
+  body .clients-page { padding: 16px; }
+}

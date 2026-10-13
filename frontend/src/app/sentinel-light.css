@@ -1,0 +1,93 @@
+
+html, body {
+  background: #fff !important;
+  color: #172033 !important;
+  color-scheme: light;
+}
+
+body main,
+body .sentinel,
+body .dashboard,
+body .control-shell,
+body .clients-page,
+body .guards-page,
+body .sites-page,
+body .shifts-page {
+  background: #fff !important;
+  color: #172033 !important;
+}
+
+body main :is(
+  section, article, dialog,
+  [class$="-panel"], [class$="-card"],
+  [class$="-row"], [class$="-details"],
+  .panel, .control-feature
+),
+body dialog {
+  background: #fff !important;
+  color: #172033 !important;
+  border-color: #dce2e9 !important;
+}
+
+body main :is(h1,h2,h3,h4,label,strong,dt,dd,td,summary),
+body dialog :is(h1,h2,h3,h4,label,strong,dt,dd,td,summary) {
+  color: #172033 !important;
+}
+
+body main :is(p,small,[class$="-help"],[class$="-details"]),
+body dialog :is(p,small,[class$="-help"],[class$="-details"]) {
+  color: #526176 !important;
+}
+
+body main :is(input,select,textarea),
+body dialog :is(input,select,textarea) {
+  background: #fff !important;
+  color: #172033 !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+body main input::placeholder,
+body dialog input::placeholder {
+  color: #64748b !important;
+}
+
+body main :is(th,thead) {
+  background: #f3f5f8 !important;
+  color: #526176 !important;
+}
+
+body main :is([class$="-row"],tbody tr):hover {
+  background: #f5f7fa !important;
+}
+
+body main button,
+body dialog button {
+  color: #172033 !important;
+}
+
+body main :is(.secondary,[class$="-close"]),
+body dialog :is(.secondary,[class$="-close"]) {
+  background: #f3f5f8 !important;
+  border-color: #cbd5e1 !important;
+}
+
+body main [class$="-error"],
+body dialog [class$="-error"] {
+  background: #fff1f2 !important;
+  color: #9f1239 !important;
+  border-color: #fecdd3 !important;
+}
+
+body main [class$="-success"],
+body dialog [class$="-success"] {
+  background: #ecfdf5 !important;
+  color: #166534 !important;
+}
+
+body dialog::backdrop {
+  background: rgb(15 23 42 / 45%);
+}
+
+body main h1 { font-size: 24px !important; font-weight: 600 !important; }
+body main h2 { font-size: 19px !important; font-weight: 600 !important; }
+body main { font-size: 14px; }

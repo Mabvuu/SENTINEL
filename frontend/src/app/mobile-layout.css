@@ -1,0 +1,213 @@
+
+/* Shared responsive layout */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; }
+body .clients-page,
+body .sentinel .dashboard { min-width: 0; }
+body .clients-page .clients-actions,
+body .guard-actions { flex-wrap: wrap; }
+body .clients-page .clients-header > *,
+body .guards-list-header > * { min-width: 0; }
+
+body .sites-page button.site-directory-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: 14px 12px;
+  margin: 0;
+  border: 0;
+  border-bottom: 1px solid #34445b;
+  border-radius: 0;
+  background: transparent;
+  color: #edf2fa;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 400;
+}
+body .sites-page button.site-directory-row:hover,
+body .sites-page button.site-directory-row:focus-visible {
+  background: #1d2c40;
+}
+.site-directory-row > span:first-child,
+.client-directory-row > span:first-child,
+.guard-directory-row > span:first-child {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.site-directory-row small {
+  margin-left: auto;
+  flex-shrink: 0;
+  color: #a8b7cb;
+  font-size: 12px;
+}
+.site-profile-dialog {
+  width: min(600px, calc(100vw - 32px));
+  max-height: 85dvh;
+  margin: auto;
+  padding: 22px;
+  overflow: auto;
+  background: #152236;
+  color: #edf2fa;
+  border: 1px solid #34445b;
+  border-radius: 12px;
+}
+.site-profile-dialog::backdrop { background: rgb(0 0 0 / 65%); }
+.site-profile-close { display: block; margin: 0 0 18px auto; }
+.site-profile-content { overflow-wrap: anywhere; }
+body:has(dialog[open]) { overflow: hidden; }
+
+body .sentinel .table-wrap {
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+body .clients-page dialog {
+  overscroll-behavior: contain;
+}
+body .clients-page dialog p,
+body .clients-page dialog dd {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 800px) {
+  body {
+    padding-left: 0 !important;
+    padding-top: calc(64px + env(safe-area-inset-top)) !important;
+  }
+  body .sentinel-global-nav {
+    position: fixed;
+    inset: 0 0 auto;
+    width: 100%;
+    height: calc(64px + env(safe-area-inset-top));
+    padding: calc(8px + env(safe-area-inset-top)) 8px 8px;
+    overflow-x: auto;
+    border-right: 0;
+    border-bottom: 1px solid #28374b;
+  }
+  body .sentinel-global-nav .sentinel-nav-brand,
+  body .sentinel-global-nav .sentinel-nav-caption {
+    display: none;
+  }
+  body .sentinel-global-nav nav {
+    display: flex;
+    width: 100%;
+    gap: 4px;
+  }
+  body .sentinel-global-nav nav a {
+    flex: 1;
+    min-height: 44px;
+    display: grid;
+    place-items: center;
+    padding: 10px 8px;
+    white-space: nowrap;
+    font-size: 13px;
+  }
+  body .clients-page,
+  body .sentinel .control-shell > .dashboard {
+    width: 100%;
+    padding: 16px;
+  }
+  body .sentinel .control-shell {
+    display: block;
+    min-height: 0;
+  }
+  body .clients-page .clients-header,
+  body .guards-list-header,
+  body .sentinel .heading,
+  body .sentinel .panel-heading {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  }
+  body .clients-page h1,
+  body .sentinel h1 { font-size: 23px; }
+  body .clients-page h2,
+  body .sentinel h2 { font-size: 17px; }
+  body .clients-page .clients-grid,
+  body .sentinel .control-overview,
+  body .sentinel .control-unconfigured {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  body .sentinel .stats,
+  body .guards-page .guards-stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  body .guards-page .guards-stats article:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+  body .clients-page .clients-panel,
+  body .sentinel .panel-heading { padding: 16px; }
+  body .clients-page .clients-search,
+  body .guards-page .guards-search {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: 100%;
+  }
+  body .clients-page .clients-search input,
+  body .guards-page .guards-search input {
+    flex: 1 1 160px;
+    min-width: 0;
+  }
+  body .clients-page button,
+  body .sentinel button { min-height: 44px; }
+  body .clients-page input,
+  body .clients-page select,
+  body .clients-page textarea,
+  body .sentinel input {
+    min-width: 0;
+    max-width: 100%;
+    font-size: 16px !important;
+  }
+  body .sentinel .panel-heading input { max-width: 100%; }
+  body .sentinel .topbar {
+    min-height: 60px;
+    padding: 12px 16px;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  body .sentinel .topbar > .muted { display: none; }
+  body .sentinel .login-card {
+    width: auto;
+    max-width: 460px;
+    margin: 20px auto;
+    padding: 20px;
+  }
+  body .guards-pagination,
+  body .sentinel .pagination {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 600px) {
+  body .clients-page dialog {
+    width: calc(100vw - 16px);
+    max-width: calc(100vw - 16px);
+    max-height: calc(100dvh - 24px);
+    margin: auto;
+    border-radius: 12px;
+  }
+  body .clients-page dialog fieldset,
+  body .guard-profile-dialog .guard-details {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+  body .clients-page dialog .clients-panel { padding: 16px; }
+  body .clients-page dialog .clients-actions {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  body .clients-page dialog .clients-actions button {
+    flex: 1 1 auto;
+  }
+  body .clients-page .client-card-heading {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}

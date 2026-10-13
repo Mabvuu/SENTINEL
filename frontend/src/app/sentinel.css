@@ -65,3 +65,28 @@
 .sentinel .control-unconfigured article{background:#111d2e}
 @media(max-width:1150px){.sentinel .control-overview,.sentinel .control-unconfigured{grid-template-columns:1fr}}
 @media(max-width:800px){.sentinel .control-shell{grid-template-columns:1fr}.sentinel .control-sidebar{padding:10px}.sentinel .control-sidebar-brand,.sentinel .control-sidebar-bottom,.sentinel .control-nav-label,.sentinel .control-pending{display:none}.sentinel .control-nav{flex-direction:row;overflow-x:auto}.sentinel .control-nav a{white-space:nowrap;flex-shrink:0}.sentinel .control-shell>.dashboard{padding:20px 14px}}
+
+/* Compact control room */
+.sentinel { font-size: 14px; }
+.sentinel .topbar { min-height: 60px; padding: 12px 24px; }
+.sentinel .brand { font-size: 16px; font-weight: 600; }
+.sentinel h1 { font-size: 26px; font-weight: 600; margin: 8px 0; }
+.sentinel h2 { font-size: 17px; font-weight: 600; }
+.sentinel button { padding: 9px 14px; font-size: 13px; font-weight: 500; }
+.sentinel input { padding: 10px 12px; font-size: 14px; }
+.sentinel .control-shell { grid-template-columns: 210px minmax(0,1fr); min-height: calc(100vh - 60px); }
+.sentinel .control-shell > .dashboard { padding: 24px; }
+.sentinel .heading { margin-bottom: 18px; }
+.sentinel .stats { gap: 12px; margin: 16px 0; }
+.sentinel .stats article { padding: 16px; border-radius: 10px; }
+.sentinel .stats strong { font-size: 26px; font-weight: 500; margin-top: 8px; }
+.sentinel .control-feature { padding: 16px; }
+.sentinel .panel-heading { padding: 16px; }
+.sentinel td { padding: 12px 16px; }
+.sentinel th { padding: 12px 16px; }
+.sentinel .empty { padding: 24px; }
+.sentinel .control-nav a { padding: 10px 12px; font-size: 13px; }
+@media (max-width:800px) {
+  .sentinel .control-shell { grid-template-columns: 1fr; }
+  .sentinel .control-shell > .dashboard { padding: 16px; }
+}

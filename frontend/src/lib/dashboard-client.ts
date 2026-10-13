@@ -33,7 +33,7 @@ async function request<T>(
 
 let queue: Promise<unknown> = Promise.resolve();
 
-export function dashboardRequest<T>(
+export async function dashboardRequest<T>(
   path: string,
   method = 'GET',
   body?: unknown,
@@ -65,6 +65,23 @@ export function dashboardRequest<T>(
       );
     }
     return await operation();
+  }
+
+
+  // Independent reads do not wait behind other pages.
+  // Authentication failures still use the existing serialized refresh.
+  if (method.toUpperCase() === 'GET') {
+    try {
+      return await request<T>(path, method, body);
+    } catch (error) {
+      if (
+        refresh === false ||
+        (error instanceof RequestError) === false ||
+        error.status !== 401
+      ) {
+        throw error;
+      }
+    }
   }
 
   const result = queue.then(run, run);
