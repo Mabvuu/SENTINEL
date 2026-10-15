@@ -40,7 +40,7 @@ export default function GuardLocation({ guardId }: { guardId: number }) {
         let page = 1;
         let found: Row | null = null;
 
-        while (active) {
+        while (Boolean(active)) {
           const feed = await dashboardRequest<Feed>(
             '/api/control-room/locations?page=' + page
           );
