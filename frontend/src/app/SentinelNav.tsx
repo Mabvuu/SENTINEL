@@ -1,15 +1,29 @@
 'use client';
 
 import Link from 'next/link';
+// Sentinel grouped workflow navigation
+import { NavigationGroups, NavigationSteps } from './NavigationFlow';
 import { usePathname } from 'next/navigation';
 import { useRef } from 'react';
 
 const links = [
+  { href: '/duty-board', label: 'Duty & shift reports', icon: 'shield' },
+  { href: '/live-rounds', label: 'Live patrol board', icon: 'shield' },
+  { href: '/routes-checkpoints', label: 'Routes & checkpoints', icon: 'calendar' },
+  { href: '/patrols', label: 'Patrol map', icon: 'shield' },
   { href: '/', label: 'Control room', icon: 'grid' },
   { href: '/guards', label: 'Guard personnel', icon: 'people' },
   { href: '/clients', label: 'Clients', icon: 'briefcase' },
   { href: '/sites', label: 'Client sites', icon: 'building' },
   { href: '/shifts', label: 'Shift roster', icon: 'calendar' },
+  { href: '/incidents', label: 'Incidents', icon: 'shield' },
+  { href: '/handovers', label: 'Handovers', icon: 'people' },
+  { href: '/inspections', label: 'Inspections', icon: 'shield' },
+  { href: '/attendance', label: 'Attendance', icon: 'calendar' },
+  { href: '/reports', label: 'Reports', icon: 'briefcase' },
+  { href: '/contracts', label: 'Contracts', icon: 'briefcase' },
+  { href: '/billing', label: 'Billing', icon: 'briefcase' },
+
 ];
 
 function Icon({ name }: { name: string }) {
@@ -65,16 +79,7 @@ export default function SentinelNav() {
 
         <p className="sn-caption">COMMAND CENTRE</p>
 
-        <nav className="sn-links" aria-label="Main navigation">
-          {links.map(item => (
-            <Link key={item.href} href={item.href}
-              aria-current={activeLink?.href === item.href ? 'page' : undefined}
-              onClick={() => drawer.current?.close()}>
-              <Icon name={item.icon} />
-              <span>{item.label}</span>
-            </Link>
-          ))}
-        </nav>
+        <NavigationGroups links={links} pathname={pathname} onNavigate={() => drawer.current?.close()} />
 
         <div className="sn-footer">
           <Icon name="shield" />
@@ -102,6 +107,7 @@ export default function SentinelNav() {
         </div>
 
         <span className="sn-timezone">CAT · UTC+2</span>
+      <NavigationSteps links={links} pathname={pathname} />
       </header>
 
       <dialog ref={drawer} className="sn-drawer" aria-label="Navigation">

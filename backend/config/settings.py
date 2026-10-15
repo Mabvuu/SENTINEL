@@ -126,3 +126,13 @@ SIMPLE_JWT = {
     "BLACKLIST_AFTER_ROTATION": True,
     "CHECK_REVOKE_TOKEN": True,
 }
+
+# Sentinel local guard browser access
+if DEBUG:
+    CORS_ALLOWED_ORIGINS = list(dict.fromkeys([
+        *CORS_ALLOWED_ORIGINS,
+        "http://localhost:8083",
+        "http://localhost:8084",
+        "http://127.0.0.1:8083",
+        "http://127.0.0.1:8084",
+    ]))

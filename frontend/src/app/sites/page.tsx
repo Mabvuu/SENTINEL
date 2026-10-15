@@ -1,4 +1,5 @@
 'use client';
+import SiteAddressPicker from '@/components/SiteAddressPicker';
 
 import { useEffect, useRef, useState } from 'react';
 import type { FormEvent } from 'react';
@@ -428,18 +429,7 @@ export default function SitesPage() {
                 />
               </label>
 
-              <label>
-                Address
-                <textarea
-                  required
-                  maxLength={4000}
-                  rows={3}
-                  value={draft.address}
-                  onChange={(event) => setDraft({
-                    ...draft, address: event.target.value,
-                  })}
-                />
-              </label>
+              <SiteAddressPicker draft={draft} onChange={patch=>setDraft(previous=>({...previous,...patch}))} />
 
               {numericFields.map(([key, label, min, max, step]) => (
                 <label key={key}>

@@ -2,8 +2,8 @@
 
 import { useEffect, useState, type FormEvent } from 'react';
 import { dashboardRequest, RequestError } from '@/lib/dashboard-client';
-import Link from 'next/link';
 import './sentinel.css';
+import DashboardSummary from '@/components/DashboardSummary';
 
 type User = {
   id: number;
@@ -221,22 +221,6 @@ export default function Page() {
         </section>
       ) : (
         <div className="control-shell">
-          <aside className="control-sidebar">
-            <div className="control-sidebar-brand"><span className="shield">S</span><div><strong>SENTINEL</strong><small>SECURITY MANAGEMENT</small></div></div>
-            <p className="control-nav-label">OPERATIONS</p>
-            <nav className="control-nav" aria-label="Main navigation">
-              <Link className="selected" href="/">Dashboard</Link>
-              <Link href="/guards">Guard Personnel</Link>
-              <Link href="/clients">Clients</Link>
-              <Link href="/sites">Client Sites</Link>
-            </nav>
-            <p className="control-nav-label">FUTURE MODULES</p>
-            <div className="control-nav control-pending" aria-label="Modules being developed">
-              <span>Shift Roster</span><span>Random Checks</span><span>Incidents</span>
-              <span>Inspections</span><span>Reports</span><span>Billing</span>
-            </div>
-            <div className="control-sidebar-bottom"><strong>CONTROL ROOM</strong><small>{user.first_name || user.username} · {user.role}</small></div>
-          </aside>
           <div className="dashboard">
           <section className="heading">
             <div>
@@ -254,35 +238,7 @@ export default function Page() {
 
           {error && <p className="error" role="alert">{error}</p>}
 
-          <section className="stats">
-            <article><span>Clocked-in records · all pages</span><strong>{feed?.count ?? '—'}</strong></article>
-            <article><span>Inside · this page</span><strong>{feed ? rows.filter(r => statusFor(r) === 'inside').length : '—'}</strong></article>
-            <article><span>Outside · this page</span><strong>{feed ? rows.filter(r => statusFor(r) === 'outside').length : '—'}</strong></article>
-            <article><span>Unconfirmed · this page</span><strong>{feed ? rows.filter(r => ['stale', 'uncertain', 'unavailable'].includes(statusFor(r))).length : '—'}</strong></article>
-          </section>
-
-          <section className="control-overview">
-            <article className="control-feature">
-              <span className="eyebrow">PERSONNEL</span><h2>Guard Management</h2>
-              <p>Manage guard accounts, training, vetting and employment details.</p>
-              <Link href="/guards">Manage guards →</Link>
-            </article>
-            <article className="control-feature">
-              <span className="eyebrow">CLIENT OPERATIONS</span><h2>Clients &amp; Sites</h2>
-              <p>Manage client locations, GPS boundaries and staffing requirements.</p>
-              <div className="control-links"><Link href="/clients">Clients →</Link><Link href="/sites">Sites →</Link></div>
-            </article>
-            <article className="control-feature">
-              <span className="eyebrow">DEPLOYMENT</span><h2>Shift Roster</h2>
-              <p>Scheduled shifts, uncovered posts and lateness will appear after the roster API is connected.</p>
-              <span className="control-not-ready">Not configured yet</span>
-            </article>
-          </section>
-          <section className="control-unconfigured" aria-label="Future operational modules">
-            <article><h2>Incident Reports</h2><p>Not configured yet.</p></article>
-            <article><h2>Supervisor Inspections</h2><p>Not configured yet.</p></article>
-            <article><h2>Billing Overview</h2><p>Not configured yet.</p></article>
-          </section>
+          <DashboardSummary key={reload} />
           <section className="panel">
             <div className="panel-heading">
               <div>
@@ -314,7 +270,7 @@ export default function Page() {
                               {position && <small>Accuracy ±{Math.round(position.accuracy_metres)} m</small>}
                             </td>
                             <td>{position
-                              ? <><span>{position.latitude.toFixed(6)}, {position.longitude.toFixed(6)}</span><small>Last reported position</small></>
+                              ? <><span>{position.latitude.toFixed(6)}, {position.longitude.toFixed(6)}</span><small><a href={`https://www.google.com/maps/search/?api=1&query=${position.latitude},${position.longitude}`} target="_blank" rel="noopener noreferrer">Open last position on map ↗</a></small></>
                               : '—'}</td>
                           </tr>
                         );

@@ -1,3 +1,4 @@
+import SentinelAccess from './SentinelAccess';
 import SentinelNav from './SentinelNav';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
@@ -11,7 +12,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body className="sentinel-app"><SentinelNav />{children}</body>
+      <body className="sentinel-app"><SentinelAccess><SentinelNav />{children}</SentinelAccess></body>
     </html>
   );
 }
@@ -21,3 +22,9 @@ import './mobile-layout.css';
 import "./sentinel-light.css";
 
 import './sentinel-shell.css';
+
+import "./sentinel-polish.css";
+
+import './sentinel-access.css';
+
+import './navigation-flow.css';

@@ -1,0 +1,141 @@
+/* Sentinel interface polish: presentation only. */
+body.sentinel-app {
+ --sidebar-width:224px;
+ --ui-ink:#243044;
+ --ui-muted:#677489;
+ --ui-line:#e4e8ed;
+ background:#fff!important;
+ color:var(--ui-ink)!important;
+ font-family:Arial,Helvetica,sans-serif;
+ font-size:14px;
+ line-height:1.5;
+}
+body.sentinel-app main,
+body.sentinel-app .control-shell,
+body.sentinel-app .control-shell > .dashboard,
+body.sentinel-app main.sentinel { background:#fff!important; }
+body.sentinel-app main:is(.clients-page,.guards-page,.sites-page,.roster-page,.shifts-page,.ops-page,.patrol-page),
+body.sentinel-app .control-shell > .dashboard { padding:26px 30px!important; max-width:1440px; margin:0 auto; }
+body.sentinel-app main h1 { font-size:25px!important; font-weight:500!important; line-height:1.25; letter-spacing:-.65px!important; margin:4px 0 8px!important; }
+body.sentinel-app main h2,
+body.sentinel-app dialog:not(.sn-drawer) h2 { font-size:18px!important; font-weight:500!important; letter-spacing:-.2px; }
+body.sentinel-app main h3,
+body.sentinel-app dialog:not(.sn-drawer) h3 { font-size:15px!important; font-weight:500!important; }
+body.sentinel-app main :is(p,label,td,input,select,textarea,button),
+body.sentinel-app dialog:not(.sn-drawer) :is(p,label,input,select,textarea,button) { font-size:13px; }
+body.sentinel-app main :is(strong,th),
+body.sentinel-app dialog:not(.sn-drawer) strong { font-weight:500!important; }
+body.sentinel-app .clients-brand,
+body.sentinel-app .ops-eyebrow,
+body.sentinel-app .heading .eyebrow { color:#8691a2!important; font-size:10px!important; font-weight:500!important; letter-spacing:1.6px!important; margin:0 0 10px; }
+body.sentinel-app :is(.clients-header,.ops-heading,.heading) { margin-bottom:22px!important; gap:16px; }
+body.sentinel-app .clients-header .clients-actions { margin-top:0; }
+body.sentinel-app main :is(.clients-panel,.guards-panel,.panel,.ops-panel,.patrol-card) { border:1px solid var(--ui-line)!important; border-radius:10px!important; box-shadow:0 2px 5px rgb(24 35 49 / 2%); }
+body.sentinel-app .clients-grid { grid-template-columns:minmax(0,1fr)!important; gap:18px!important; }
+body.sentinel-app .clients-panel { padding:18px!important; }
+body.sentinel-app .clients-search,
+body.sentinel-app .ops-toolbar { gap:8px!important; align-items:center; }
+body.sentinel-app main :is(input,select,textarea),
+body.sentinel-app dialog:not(.sn-drawer) :is(input,select,textarea) {
+ border:1px solid #dbe1e8!important; border-radius:7px!important;
+ background:#fff!important; color:#243044!important;
+ padding:10px 12px!important; font-weight:400!important;
+ box-shadow:none; line-height:1.4; min-width:0;
+}
+body.sentinel-app main :is(input,select):not([type=checkbox]):not([type=radio]),
+body.sentinel-app dialog:not(.sn-drawer) :is(input,select):not([type=checkbox]):not([type=radio]) { min-height:40px; }
+body.sentinel-app main input::placeholder { color:#929dac!important; }
+body.sentinel-app main :is(input,select,textarea):focus-visible,
+body.sentinel-app dialog:not(.sn-drawer) :is(input,select,textarea):focus-visible { outline:2px solid #e9bc86; outline-offset:2px; }
+body.sentinel-app main button:not(.leaflet-container button),
+body.sentinel-app dialog:not(.sn-drawer) button:not(.leaflet-container button) {
+ font-size:13px!important; font-weight:500!important; line-height:1.4;
+ border-radius:7px; padding:10px 14px; min-height:40px;
+ background:#f1ab60; color:#302a23!important; border:1px solid transparent;
+ box-shadow:none; cursor:pointer;
+}
+body.sentinel-app main button.secondary,
+body.sentinel-app dialog:not(.sn-drawer) button.secondary,
+body.sentinel-app dialog:not(.sn-drawer) button[class*="close"] { background:#fff!important; border:1px solid #dbe1e8!important; color:#526074!important; }
+body.sentinel-app button:disabled { opacity:.45; cursor:not-allowed!important; }
+body.sentinel-app button:focus-visible,body.sentinel-app a:focus-visible { outline:2px solid #d39142; outline-offset:3px; }
+body.sentinel-app main button:is(.client-directory-row,.guard-directory-row,.site-directory-row,.roster-row,.ops-row) {
+ background:#fff!important; color:#243044!important; border:0!important;
+ border-bottom:1px solid #edf0f4!important; border-radius:0!important;
+ padding:13px 10px!important; min-height:54px; font-weight:400!important;
+}
+body.sentinel-app main button:is(.client-directory-row,.guard-directory-row,.site-directory-row,.roster-row,.ops-row):hover { background:#fafbfc!important; box-shadow:inset 2px 0 #efaa60; }
+body.sentinel-app main :is(.client-directory-row,.guard-directory-row,.site-directory-row,.roster-row,.ops-row) small { color:#8490a1!important; font-size:11px!important; }
+body.sentinel-app main :is(.clients-error,.guards-error,.sites-error,.ops-error,.patrol-warning,.error) { background:#fff5f5!important; color:#a63747!important; border:1px solid #f2dce0!important; border-radius:8px; font-size:13px; padding:12px 14px; }
+body.sentinel-app main :is(.clients-success,.guards-success,.sites-success,.ops-success,.success) { background:#f1faf5!important; color:#287248!important; border:1px solid #daede1!important; }
+body.sentinel-app dialog:not(.sn-drawer) {
+ border:1px solid #e3e7ed!important; border-radius:14px!important;
+ box-shadow:0 24px 80px rgb(15 23 42 / 18%); background:#fff!important;
+ padding:24px!important; max-width:calc(100vw - 28px); max-height:88dvh;
+ overflow:auto; overscroll-behavior:contain;
+}
+body.sentinel-app dialog:not(.sn-drawer)::backdrop { background:rgb(17 27 42 / 36%); backdrop-filter:blur(3px); }
+body.sentinel-app dialog:not(.sn-drawer) .clients-panel { border:0!important; box-shadow:none; padding:0!important; }
+body.sentinel-app .sn-sidebar { width:224px; padding:22px 14px 16px; background:#142032!important; border:0; scrollbar-width:thin; scrollbar-color:#344156 transparent; }
+body.sentinel-app .sn-brand { gap:10px; padding:0 8px; }
+body.sentinel-app .sn-logo { width:36px; height:40px; font-size:25px; border-radius:10px; }
+body.sentinel-app .sn-brand strong { font-size:21px; letter-spacing:1.5px; }
+body.sentinel-app .sn-brand small { font-size:8px; letter-spacing:2px; line-height:1.8; }
+body.sentinel-app .sn-workspace { margin:22px 0 18px; padding:11px; border-radius:9px; }
+body.sentinel-app .sn-workspace strong { font-size:11px; font-weight:500; }
+body.sentinel-app .sn-workspace small { font-size:10px; }
+body.sentinel-app .sn-workspace-icon { width:30px; height:34px; font-size:10px; }
+body.sentinel-app .sn-caption { font-size:9px; letter-spacing:1.7px; margin:0 10px 8px; }
+body.sentinel-app .sn-links { gap:3px; }
+body.sentinel-app .sn-links a { min-height:39px; padding:9px 11px; gap:11px; border-radius:7px; font-size:12px; font-weight:400; }
+body.sentinel-app .sn-links svg { width:17px; height:17px; flex-shrink:0; }
+body.sentinel-app .sn-links a[aria-current=page] { background:#29374b; color:#fff; }
+body.sentinel-app .sn-topbar { height:60px; left:224px; border-bottom:1px solid #edf0f4; padding:0 30px; }
+body.sentinel-app { padding-top:60px!important; }
+body.sentinel-app .sn-breadcrumb { font-size:11px; }
+body.sentinel-app .sn-footer { font-size:10px; padding-top:22px; }
+body.sentinel-app .ops-stat-grid > a { border-color:#e4e8ed; box-shadow:none; border-radius:9px; }
+body.sentinel-app .ops-stat-grid strong { font-size:27px!important; font-weight:500!important; }
+body.sentinel-app .ops-stat-grid small { font-size:11px!important; }
+body.sentinel-app .ops-overview-banner { padding:18px; background:#fff; }
+body.sentinel-app .panel-heading { padding:18px; }
+body.sentinel-app .table-wrap { overflow:auto; }
+body.sentinel-app .table-wrap :is(td,th) { padding:13px 16px!important; font-size:12px; }
+body.sentinel-app .table-wrap th { font-size:10px; text-transform:uppercase; letter-spacing:.8px; }
+body.sentinel-app .badge { padding:4px 8px; border-radius:5px; font-size:10px; font-weight:500; }
+body.sentinel-app .login-card { width:min(420px,calc(100% - 28px)); margin:64px auto; border-radius:12px; border:1px solid #e4e8ed; box-shadow:0 12px 40px rgb(24 35 49 / 5%); }
+@media(max-width:800px) {
+ body.sentinel-app { padding:60px 0 0!important; }
+ body.sentinel-app .sn-sidebar { display:none; }
+ body.sentinel-app .sn-topbar { left:0; height:60px; padding:0 14px; }
+ body.sentinel-app .sn-menu-button { display:flex; }
+ body.sentinel-app main:is(.clients-page,.guards-page,.sites-page,.roster-page,.shifts-page,.ops-page,.patrol-page),body.sentinel-app .control-shell > .dashboard { padding:20px 16px!important; }
+ body.sentinel-app main h1 { font-size:22px!important; }
+ body.sentinel-app .sn-links a { min-height:44px; font-size:13px; }
+ body.sentinel-app main :is(input,select,textarea),body.sentinel-app dialog:not(.sn-drawer) :is(input,select,textarea) { font-size:16px!important; }
+ body.sentinel-app main button:not(.leaflet-container button),body.sentinel-app dialog:not(.sn-drawer) button:not(.leaflet-container button) { min-height:44px; }
+ body.sentinel-app .clients-header { align-items:flex-start; }
+ body.sentinel-app .clients-search { flex-wrap:wrap; }
+ body.sentinel-app .clients-search input { flex:1 1 100%; }
+ body.sentinel-app .roster-page dialog fieldset { grid-template-columns:minmax(0,1fr)!important; }
+ body.sentinel-app .ops-heading { flex-wrap:wrap; }
+ body.sentinel-app dialog:not(.sn-drawer) { padding:18px!important; }
+ body.sentinel-app .login-card { margin:32px auto; }
+}
+@media(prefers-reduced-motion:reduce) { body.sentinel-app *,body.sentinel-app *::before,body.sentinel-app *::after { scroll-behavior:auto!important; transition:none!important; animation:none!important; } }
+
+/* Sentinel orange and navy accents */
+body.sentinel-app main :is(h1,h2,h3),
+body.sentinel-app dialog:not(.sn-drawer) :is(h2,h3) { color:#203b60!important; }
+body.sentinel-app main :is(.clients-brand,.ops-eyebrow),
+body.sentinel-app .heading .eyebrow { color:#a95810!important; }
+body.sentinel-app main :is(.heading,.clients-header,.ops-heading) h1 { border-left:3px solid #efa65c; padding-left:12px; }
+body.sentinel-app .ops-stat-grid > a { border-top:3px solid #efa65c; }
+body.sentinel-app .ops-stat-grid > a:nth-child(even) { border-top-color:#345d86; }
+body.sentinel-app .ops-stat-grid strong { color:#203b60!important; }
+body.sentinel-app .ops-overview-banner { border-left:3px solid #efa65c; }
+body.sentinel-app .ops-overview-banner strong { color:#203b60!important; }
+body.sentinel-app main .ops-panel a:not(.ops-coverage > a),
+body.sentinel-app main .dashboard-quick-links a { color:#244d77; text-decoration:none; }
+body.sentinel-app .dashboard-quick-links a:hover { background:#fff6ec; border-color:#edc699; }
+body.sentinel-app .sn-links a[aria-current=page] svg { color:#f2b16c; }

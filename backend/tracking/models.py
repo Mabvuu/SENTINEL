@@ -65,3 +65,35 @@ class LatestLocation(models.Model):
 
     def __str__(self):
         return f"Attendance {self.attendance_id}: {self.status}"
+
+# Sentinel patrol history v1
+class PatrolPoint(models.Model):
+    attendance = models.ForeignKey(Attendance, on_delete=models.CASCADE, related_name='patrol_points')
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+    accuracy_metres = models.FloatField()
+    captured_at = models.DateTimeField()
+    received_at = models.DateTimeField()
+    status = models.CharField(max_length=12)
+    distance_added = models.FloatField(default=0)
+    usable = models.BooleanField(default=False)
+    is_anchor = models.BooleanField(default=False)
+    segment_start = models.BooleanField(default=True)
+    reason = models.CharField(max_length=40, blank=True)
+
+    class Meta:
+        ordering = ['captured_at', 'id']
+        constraints = [models.UniqueConstraint(fields=['attendance', 'captured_at'], name='unique_patrol_capture')]
+        indexes = [models.Index(fields=['attendance', 'id'], name='patrol_attendance_cursor')]
+
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+@receiver(post_save, sender=LatestLocation, dispatch_uid='sentinel_patrol_history_v1')
+def record_patrol_location(sender, instance, **kwargs):
+    from .patrol_service import record_point
+    record_point(instance)
+
+from .round_models import PatrolRoute, ScheduledRound, CheckpointVisit
+
+from .duty_models import ShiftReport

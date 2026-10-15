@@ -37,3 +37,24 @@ __pycache__/
 *.key
 backups/
 .DS_Store
+
+# Local configuration, databases and generated files
+.env
+.env.*
+*.sqlite3*
+*.db
+*.pem
+*.key
+.venv*/
+__pycache__/
+node_modules/
+.next/
+.expo/
+dist/
+backups/
+*.backup*
+*.before-*
+*.log
+.DS_Store
+backend/media/
+backend/staticfiles/

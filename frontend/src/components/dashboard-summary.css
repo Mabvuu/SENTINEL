@@ -1,0 +1,28 @@
+
+.ops-overview-banner { background:#fff; border:1px solid #e1e6ed; color:#243247; border-radius:10px; padding:18px; display:flex; justify-content:space-between; align-items:center; gap:16px; margin:16px 0; }
+.ops-overview-banner strong { font-size:18px; font-weight:500; }
+.ops-overview-banner p,.ops-overview-banner span { color:#64748b; font-size:12px; margin:7px 0 0; }
+.dashboard-quick-links { display:flex; flex-wrap:wrap; gap:8px; margin:14px 0; }
+.dashboard-quick-links a { padding:9px 12px; border:1px solid #d9e0e9; border-radius:6px; text-decoration:none; background:white; color:#334155; font-size:13px; }
+.ops-stat-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:12px; margin:16px 0; }
+.ops-stat-grid > a { display:flex; flex-direction:column; gap:9px; border:1px solid #e1e6ed; background:white; color:#334155; border-radius:10px; padding:16px; text-decoration:none; }
+.ops-stat-grid span { font-size:13px; }
+.ops-stat-grid strong { font-size:26px; font-weight:500; }
+.ops-stat-grid small { font-size:11px; line-height:1.5; color:#64748b; }
+.dashboard .ops-panel { background:white; border:1px solid #e1e6ed; border-radius:10px; padding:18px; margin:16px 0; }
+.dashboard .ops-heading { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.dashboard .ops-heading h2 { font-size:17px; font-weight:500; margin:0; }
+.dashboard .ops-heading p { color:#64748b; font-size:12px; }
+.ops-coverage { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; }
+.ops-coverage > a { display:flex; flex-direction:column; gap:8px; padding:14px; border:1px solid #e1e6ed; border-radius:8px; color:#334155; text-decoration:none; }
+.ops-coverage strong { font-size:14px; font-weight:500; }
+.ops-coverage span,.ops-coverage small { font-size:12px; color:#64748b; }
+.ops-coverage progress { width:100%; height:7px; accent-color:#d88c39; }
+.dashboard .ops-error { padding:12px; background:#fff1f2; color:#9f1239; border-radius:6px; }
+body.sentinel-app main.sentinel > .topbar .brand, body.sentinel-app main.sentinel > .topbar > .muted { display:none; }
+body.sentinel-app main.sentinel > .topbar { justify-content:flex-end; min-height:0; height:auto; padding:12px 24px 0; background:transparent; border:0; }
+body.sentinel-app .dashboard .heading h1 { font-size:24px!important; font-weight:500!important; }
+.sn-links a { padding-top:10px; padding-bottom:10px; font-size:13px; }
+.sn-workspace { margin-top:18px; margin-bottom:14px; }
+@media(max-width:600px){.ops-stat-grid{grid-template-columns:1fr 1fr;}.ops-stat-grid > a{padding:12px;}.ops-stat-grid strong{font-size:22px;}.ops-coverage{grid-template-columns:1fr;}.dashboard .ops-heading{align-items:start;flex-direction:column;}.ops-overview-banner{align-items:start;flex-direction:column;}}
+@media(max-width:360px){.ops-stat-grid{grid-template-columns:1fr;}}

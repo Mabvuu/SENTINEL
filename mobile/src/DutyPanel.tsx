@@ -1,0 +1,27 @@
+import React,{useEffect,useRef,useState} from 'react';
+import {Pressable,StyleSheet,Text,TextInput,View} from 'react-native';
+import {api} from './api';
+export type Duty={id:number;duty_status:string;required_rounds:number;completed_rounds:number;checkpoints_checked:number;checkpoints_required:number;report_draft:string;report:null|{narrative:string;missed_reason:string;incidents:string;submitted_at:string};attendance:null|{clocked_out_at:string|null};rounds:{id:number;status:string;starts_at:string;due_at:string}[]};
+export default function DutyPanel({shiftId,paused=false}:{shiftId:number;paused?:boolean}){
+ const [data,setData]=useState<Duty|null>(null),[error,setError]=useState(''),[text,setText]=useState(''),[reason,setReason]=useState(''),[incidents,setIncidents]=useState(''),[busy,setBusy]=useState(false),[tick,setTick]=useState(Date.now());
+ const dirty=useRef(false),lock=useRef(false);
+ useEffect(()=>{let dead=false;let timer:ReturnType<typeof setTimeout>;async function poll(){try{const d=await api<Duty>('/api/duty/mine/?shift='+shiftId);if(!dead){setData(d);setError('');if(!dirty.current)setText(d.report_draft);setTick(Date.now());}}catch(e){if(!dead)setError(e instanceof Error?e.message:'Cannot load duty progress');}finally{if(!dead)timer=setTimeout(poll,10000);}}void poll();return()=>{dead=true;clearTimeout(timer);};},[shiftId]);
+ async function submit(){if(lock.current)return;lock.current=true;setBusy(true);setError('');try{const result=await api<Duty>('/api/duty/mine/','POST',{shift:shiftId,narrative:text,missed_reason:reason,incidents});setData(result);}catch(e){setError(e instanceof Error?e.message:'Report not saved.');}finally{lock.current=false;setBusy(false);}}
+ const next=data?.rounds.find(r=>r.status==='scheduled');
+ return <View style={s.panel}><Text style={s.label}>SHIFT PROGRESS</Text>{error?<Text accessibilityRole="alert" style={s.error}>{error}</Text>:null}{!data?<Text style={s.note}>Loading progress…</Text>:<>
+ <Text style={s.title}>{data.completed_rounds} / {data.required_rounds} rounds completed</Text>
+ <View style={s.track}><View style={[s.fill,{width:`${data.required_rounds?100*data.completed_rounds/data.required_rounds:0}%`}]}/></View>
+ <Text style={s.note}>{data.checkpoints_checked} of {data.checkpoints_required} checkpoint visits recorded.</Text>
+ {next?<Text style={s.note}>{Date.parse(next.starts_at)>tick?`Next round in ${Math.ceil((Date.parse(next.starts_at)-tick)/60000)} minutes.`:'Your next patrol is ready. Open Patrol below to start.'}</Text>:null}
+ {data.rounds.some(r=>r.status==='incomplete')?<Text style={s.error}>A round was not completed. Include the reason in your shift report.</Text>:null}
+ {data.report?<><Text style={s.title}>Report submitted ✓</Text><Text style={s.note}>{data.report.narrative}</Text>{!!data.report.missed_reason&&<Text style={s.note}>Missed rounds: {data.report.missed_reason}</Text>}{!!data.report.incidents&&<Text style={s.note}>Incidents: {data.report.incidents}</Text>}</>:!data.attendance?.clocked_out_at?<Text style={s.note}>After clock-out, return here to review your report, explain missed rounds and submit your handover.</Text>:<>
+ <Text style={s.title}>Your shift report</Text><Text style={s.note}>Review the recorded totals and add your observations. Submit after clock-out.</Text>
+ <Text style={s.label}>Observations and handover</Text><TextInput multiline value={text} onChangeText={v=>{dirty.current=true;setText(v);}} maxLength={4000} style={s.input} placeholder="What did you check? Anything to hand over?"/>
+ {data.completed_rounds<data.required_rounds&&<><Text style={s.label}>Why were rounds not completed?</Text><TextInput multiline style={s.input} maxLength={2000} value={reason} onChangeText={setReason} placeholder="For example: assisting a visitor at the gate…"/></>}
+ <Text style={s.label}>Incidents or concerns (optional)</Text><TextInput multiline style={s.input} maxLength={2000} value={incidents} onChangeText={setIncidents} placeholder="Describe what happened, or leave blank."/>
+ <Pressable accessibilityRole="button" disabled={paused||busy||!data.attendance?.clocked_out_at} onPress={()=>void submit()} style={[s.button,(paused||busy||!data.attendance?.clocked_out_at)&&{opacity:.45}]}><Text style={s.buttonText}>{busy?'Saving…':data.attendance?.clocked_out_at?'Submit shift report':'Clock out before submitting'}</Text></Pressable>
+ <Text style={s.note}>Draft text stays on this screen until you close it. Submitted reports are saved for your supervisor.</Text>
+ </>}
+ </>}</View>;
+}
+const s=StyleSheet.create({panel:{marginVertical:12,padding:16,backgroundColor:'#f4f7fa',borderRadius:14},label:{fontSize:10,fontWeight:'600',letterSpacing:1,color:'#60738a',marginBottom:7,marginTop:8},title:{fontSize:15,fontWeight:'600',color:'#173650',marginVertical:8},note:{fontSize:12,color:'#5a7085',lineHeight:19,marginBottom:8},track:{height:6,borderRadius:3,backgroundColor:'#dce5ee',overflow:'hidden',marginVertical:10},fill:{height:6,backgroundColor:'#db8227'},input:{backgroundColor:'#fff',borderWidth:1,borderColor:'#d6e0e9',borderRadius:10,padding:12,fontSize:13,color:'#203b58',minHeight:78,textAlignVertical:'top',marginBottom:10},button:{padding:13,borderRadius:10,backgroundColor:'#203b58'},buttonText:{color:'#fff',textAlign:'center',fontSize:13,fontWeight:'600'},error:{fontSize:12,color:'#a12c2c',padding:10,backgroundColor:'#fff0ee',borderRadius:8}});

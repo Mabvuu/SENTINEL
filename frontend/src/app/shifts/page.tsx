@@ -1,4 +1,5 @@
 'use client';
+import SiteMap from '@/components/SiteMap';
 
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { dashboardRequest } from '../../lib/dashboard-client';
@@ -10,7 +11,7 @@ type Guard = {
   id: number; username: string; first_name: string; last_name: string;
   is_active: boolean;
 };
-type Site = { id: number; name: string; client_name: string; is_active: boolean };
+type Site = { latitude: string; longitude: string; radius_metres: number; address: string; id: number; name: string; client_name: string; is_active: boolean };
 type Shift = {
   id: number; guard_name: string; site_name: string; client_name: string;
   starts_at: string; ends_at: string; status: string; notes: string;
@@ -223,7 +224,8 @@ export default function ShiftsPage() {
                 ))}
               </select>
             </label>
-            <label>Shift starts (CAT)
+            {sites.filter(site=>String(site.id)===draft.site).map(site=><div className="roster-wide" key={site.id}><p>{site.address}</p><SiteMap key={site.id} latitude={Number(site.latitude)} longitude={Number(site.longitude)} radius={site.radius_metres}/><small>This saved boundary is checked against the guard’s phone at clock-in.</small></div>)}
+<label>Shift starts (CAT)
               <input required type="datetime-local" value={draft.starts_at}
                 onChange={event => setDraft({ ...draft, starts_at: event.target.value })} />
             </label>

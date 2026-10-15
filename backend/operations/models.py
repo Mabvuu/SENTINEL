@@ -171,3 +171,49 @@ class Shift(models.Model):
 
     def __str__(self):
         return f"{self.guard} — {self.site.name} — {self.starts_at}"
+
+# Sentinel operations modules v1
+class OperationsEntry(models.Model):
+    KIND = [("incident", "Incident"), ("handover", "Handover"), ("inspection", "Supervisor check")]
+    kind = models.CharField(max_length=20, choices=KIND)
+    site = models.ForeignKey(Site, on_delete=models.PROTECT, related_name="entries")
+    title = models.CharField(max_length=200)
+    notes = models.TextField()
+    severity = models.CharField(max_length=10, choices=[("low", "Low"), ("medium", "Medium"), ("high", "High")], default="low")
+    status = models.CharField(max_length=12, choices=[("open", "Open"), ("resolved", "Resolved")], default="open")
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    created_at = models.DateTimeField(auto_now_add=True)
+    resolved_at = models.DateTimeField(null=True, blank=True)
+    resolved_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, null=True, blank=True, related_name="resolved_entries")
+
+    class Meta:
+        ordering = ["-created_at", "-id"]
+
+
+class Contract(models.Model):
+    client = models.ForeignKey(Client, on_delete=models.PROTECT, related_name="contracts")
+    reference = models.CharField(max_length=80, unique=True)
+    starts_on = models.DateField()
+    ends_on = models.DateField()
+    monthly_fee = models.DecimalField(max_digits=12, decimal_places=2, validators=[MinValueValidator(0)])
+    notes = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at", "-id"]
+        constraints = [models.CheckConstraint(condition=Q(ends_on__gte=F("starts_on")), name="contract_dates_valid"), models.CheckConstraint(condition=Q(monthly_fee__gte=0), name="contract_fee_nonnegative")]
+
+
+class Invoice(models.Model):
+    contract = models.ForeignKey(Contract, on_delete=models.PROTECT, related_name="invoices")
+    reference = models.CharField(max_length=80, unique=True)
+    amount = models.DecimalField(max_digits=12, decimal_places=2, validators=[MinValueValidator(0.01)])
+    due_on = models.DateField()
+    notes = models.TextField(blank=True)
+    paid_at = models.DateTimeField(null=True, blank=True)
+    paid_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at", "-id"]
+        constraints = [models.CheckConstraint(condition=Q(amount__gt=0), name="invoice_amount_positive")]

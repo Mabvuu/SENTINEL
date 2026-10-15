@@ -33,7 +33,7 @@ async function request<T>(
 
 let queue: Promise<unknown> = Promise.resolve();
 
-export async function dashboardRequest<T>(
+async function sentinelOriginalRequest<T>(
   path: string,
   method = 'GET',
   body?: unknown,
@@ -87,4 +87,20 @@ export async function dashboardRequest<T>(
   const result = queue.then(run, run);
   queue = result.catch(() => undefined);
   return result;
+}
+
+/* Sentinel authentication lifecycle */
+export async function dashboardRequest<T>(path: string, method = 'GET', body?: unknown, refresh = true): Promise<T> {
+  try {
+    const result = await sentinelOriginalRequest<T>(path, method, body, refresh);
+    if (path.split('?')[0].replace(/\/$/, '') === '/api/auth/logout') {
+      window.dispatchEvent(new Event('sentinel:signed-out'));
+    }
+    return result;
+  } catch (error) {
+    if (error instanceof RequestError && error.status === 401 && path.split('?')[0].replace(/\/$/, '') !== '/api/auth/login') {
+      window.dispatchEvent(new Event('sentinel:signed-out'));
+    }
+    throw error;
+  }
 }
